@@ -42,10 +42,11 @@
         class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
         <li><a>About</a></li>
      <li><a>Gallery</a></li>
-      <li><a>Plant a Tree</a></li>
+      <li><button>Plant a Tree</button></li>
       </ul>
     </div>
- <h1 class="text-lg font-semibold text-white ml-5">Green Earth</h1>
+ <h1 class=" text-sm md:text-lg lg:xl font-semibold text-white md:ml-5"> 
+  <span class="text-xl">🌱</span>Green Earth</h1>
   </div>
   <div class="navbar-center hidden lg:flex">
     <ul class="menu menu-horizontal px-1  text-white">
@@ -56,7 +57,7 @@
   </div>
   <div class="navbar-end">
     
-    <p class="bg-[#facc15]  text-center px-4 py-2 rounded-2xl text-[#15803d] font-semibold mr-5">Plant a Tree</p>
+    <p class="bg-[#facc15]  text-center text-sm px-2 py-1 md:text-lg lg:text-lg lg:px-4 lg:py-2 md:px-4 md:py-2 rounded-2xl text-[#15803d] md:font-semibold lg:font-semibold  mr-5">Plant a Tree</p>
   </div>
 </div>
         </nav>
@@ -80,10 +81,19 @@ generations.</p>
   <!-- MAIN LAYOUT -->
   <main class="max-w-8xl mx-auto bg-[#f0fdf4] px-4 py-10 grid grid-cols-1 lg:grid-cols-12 gap-6">
     <!-- SIDEBAR CATEGORIES -->
-    <aside class="lg:col-span-2 bg-white p-4 rounded-lg shadow-sm ml-10 ">
-      <h3 class="font-semibold mb-3">Categories</h3>
-      <ul id="all-category" class="space-y-2 text-sm"></ul>
-    </aside>
+    <!-- Sidebar for large screens -->
+<aside class="lg:col-span-2 bg-white p-4 rounded-lg shadow-sm ml-10 lg:block">
+  <h3 class="font-semibold mb-3">Categories</h3>
+  <ul id="all-category" class="space-y-2 text-sm"></ul>
+</aside>
+<!-- 
+ Dropdown for mobile
+<div class="lg:hidden p-4">
+  <label tabindex="0" class="btn w-full bg-emerald-700 text-white">Categories ▼</label>
+  <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-white rounded-box mt-2 w-full" id="all-category-mobile">
+     Categories will be dynamically inserted here
+  </ul>
+</div> -->
 
     <!-- CARDS -->
     <section class="lg:col-span-7">
@@ -93,9 +103,10 @@ generations.</p>
       </div>
 
       <!-- spinner -->
-      <div id="spinner" class="hidden justify-center items-center py-10">
-        <div class="spinner"></div>
-      </div>
+      <div id="spinner" class="hidden flex justify-center items-center py-10">
+    <span class="loading loading-dots loading-xl"></span>
+</div>
+
 
       <div id="tree-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
 
@@ -121,9 +132,9 @@ generations.</p>
       <div class=" ">
         <p class="mt-3 text-md  text-slate-700 text-center md:text-left lg:text-left">Green Earth is a global tree plantation initiative dedicated to fighting  climate change. Since our start, we’ve planted over <br>500,000 trees  worldwide. By joining our campaign, you help restore <br> forests, create  habitats for wildlife, and combat global warming.</p>
        
-            <li class="ml-6">Restoration of natural habitats</li>
+            <ul><li class="ml-6">Restoration of natural habitats</li>
             <li class="ml-6">Improvement of air quality</li>
-            <li class="ml-6">Support for local communities</li>
+            <li class="ml-6">Support for local communities</li></ul>
       </div>
     </div>
 
@@ -137,11 +148,11 @@ generations.</p>
         <p>Trees Planted</p>
     </div>
 <div class="border bg-white border-gray-100 p-4 rounded-lg shadow-lg text-center">
-        <h1 class="text-3xl text-[#15803d] font-bold p-2">500K+</h1>
-        <p>Trees Planted</p>
+        <h1 class="text-3xl text-[#15803d] font-bold p-2">120K+</h1>
+        <p>Communities Involved</p>
     </div>
 <div class="border bg-white border-gray-100 p-4 rounded-lg shadow-lg text-center">
-        <h1 class="text-3xl text-[#15803d] font-bold p-2">500K+</h1>
+        <h1 class="text-3xl text-[#15803d] font-bold p-2">30K+</h1>
         <p>Trees Planted</p>
     </div>
 
@@ -166,13 +177,20 @@ generations.</p>
   <!-- </section> -->
    </section>
   <footer class="text-center text-sm mt-0 text-white bg-[#14532d] py-6">© 2025 Green Earth. All rights reserved.</footer>
-  <!-- MODAL -->
-  <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4">
-    <div class="bg-white rounded-lg max-w-2xl w-full p-4 relative">
-      <button id="modal-close" class="absolute right-3 top-3  text-slate-600">✕</button>
-      <div id="modal-content"></div>
+ 
+ <!-- MODAL -->
+<div id="modal" class="fixed inset-0 bg-transparent hidden flex items-center justify-center z-[9999]">
+  <div class="bg-white rounded-lg max-w-lg w-full p-6 relative shadow-lg">
+    <!-- Close Button -->
+    <button id="modal-close" class="absolute right-3 top-3 text-gray-600 hover:text-red-500 text-xl">✕</button>
+    
+   
+    <div id="modal-content">
+     
     </div>
   </div>
+</div>
+
 </body>
 <script src="script/index.js"></script>
 </html>
