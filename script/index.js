@@ -1,4 +1,4 @@
-// API endpoints
+// API 
 const API_BASE = 'https://openapi.programming-hero.com/api';
 const ALL_PLANTS = API_BASE + '/plants';
 const ALL_CATEGORIES = API_BASE + '/categories';
@@ -17,7 +17,7 @@ const modalContent = document.getElementById('modal-content');
 
 // Global state
 let cart = [];
-let allPlantsData = []; // To store all plant data once
+let allPlantsData = []; 
 let activeCategoryId = null;
 
 // Helper functions
@@ -155,7 +155,7 @@ function displayCategory(categories) {
         allCategory.appendChild(li);
         li.querySelector('button').addEventListener('click', () => {
             setActiveCategory(id);
-            loadCategoryPlants(name); // Use category name for filtering as category IDs are not consistent
+            loadCategoryPlants(name); 
         });
     });
 }
