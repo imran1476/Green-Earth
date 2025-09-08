@@ -112,13 +112,14 @@ function displayPlants(plants) {
         card.innerHTML = `
             <img src="${img}" alt="${name}" class="w-full h-40 object-cover rounded-md mb-3">
             <h3 class="font-semibold text-lg leading-6 hover:underline cursor-pointer" data-id="${id}">${name}</h3>
-            <p class="text-sm text-slate-600">${desc.length > 100 ? desc.substring(0, 100) + '...' : desc}</p>
+            <p class="text-sm  h-[60px] overflow-x-auto text-ellipsis text-slate-600">${desc.length > 100 ? desc.substring(0, 100) + '...' : desc}</p>
             <div class="mt-3 flex items-center justify-between">
                 <div class="text-xs bg-emerald-100 px-2 py-1 rounded">${category}</div>
                 <div class="font-semibold">৳${price}</div>
             </div>
             <div class="mt-3">
-                <button class="add-to-cart w-full bg-emerald-700 text-white py-2 rounded" data-id="${id}" data-name="${escapeHtml(name)}" data-price="${price}">Add to Cart</button>
+                <button class="add-to-cart w-full bg-emerald-700 text-white py-2 rounded transition-transform duration-200
+ hover:-translate-y-1 cursor-pointer hover:bg-emerald-800" data-id="${id}" data-name="${escapeHtml(name)}" data-price="${price}">Add to Cart</button>
             </div>
         `;
         treeContainer.appendChild(card);
@@ -188,7 +189,8 @@ function openModalWithPlant(id) {
                     <h2 class="text-xl font-bold mb-2">${name}</h2>
                     <p class="text-sm text-slate-700 mb-3">${desc}</p>
                     <div class="font-semibold mb-3">Price: ৳${price}</div>
-                    <button class="bg-emerald-700 text-white px-4 py-2 rounded" id="modal-add">Add to Cart</button>
+                    <button class="bg-emerald-700 text-white px-4 py-2 rounded transition-transform duration-200
+ hover:-translate-y-1 cursor-pointer hover:bg-emerald-800" id="modal-add">Add to Cart</button>
                 </div>
             </div>
         `;
