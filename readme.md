@@ -15,3 +15,26 @@
 - Automatically binds `this`  
 ```javascript
 const add = (a, b) => a + b;
+
+## 4) How does destructuring assignment work in ES6?
+
+**Destructuring assignment is an ES6 feature that allows values from an object or an array to be assigned directly to variables. 
+
+### Example (Array):
+```js
+const fruits = ['Apple', 'Banana', 'Mango'];
+const [first, second, third] = fruits;
+
+console.log(first);  // Output: Apple
+console.log(second); // Output: Banana
+console.log(third);  // Output: Mango
+
+## 5) Explain template literals in ES6. How are they different from string concatenation?
+
+Template literals are a feature in ES6 that allow you to create strings in a more readable and convenient way.
+
+They use backticks (`) instead of quotes.
+
+Variables and expressions can be embedded using ${variable}.
+
+They support multi-line strings.

@@ -187,6 +187,7 @@ function openModalWithPlant(id) {
                 <div><img src="${img}" alt="${name}" class="w-full h-60 object-cover rounded-md mb-3"></div>
                 <div>
                     <h2 class="text-xl font-bold mb-2">${name}</h2>
+                    
                     <p class="text-sm text-slate-700 mb-3">${desc}</p>
                     <div class="font-semibold mb-3">Price: ৳${price}</div>
                     <button class="bg-emerald-700 text-white px-4 py-2 rounded transition-transform duration-200
@@ -195,8 +196,11 @@ function openModalWithPlant(id) {
             </div>
         `;
         document.getElementById('modal-add').addEventListener('click', () => {
+           
             addToCart({ id, name, price });
+    
             closeModal();
+            
         });
     } else {
         modalContent.innerHTML = '<div class="p-6 text-center">Failed to load details.</div>';
