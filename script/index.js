@@ -7,6 +7,7 @@ const PLANT_BY_ID = (id) => API_BASE + '/plant/' + id;
 
 // DOM elements
 const allCategory = document.getElementById('all-category');
+const mobileCategorySelect = document.getElementById('all-category-mobile');
 const treeContainer = document.getElementById('tree-container');
 const spinner = document.getElementById('spinner');
 const itemCount = document.getElementById('item-count');
@@ -14,6 +15,9 @@ const cartList = document.getElementById('cart-list');
 const cartTotal = document.getElementById('cart-total');
 const modal = document.getElementById('modal');
 const modalContent = document.getElementById('modal-content');
+const cartCount = document.getElementById('cart-count'); 
+const cartListMobile = document.getElementById('cart-list-mobile'); 
+const cartTotalMobile = document.getElementById('cart-total-mobile');
 
 // Global state
 let cart = [];
@@ -78,15 +82,20 @@ function loadAllPlants() {
 }
 
 function loadCategoryPlants(id) {
-    if (id === 'all') {
-        displayPlants(allPlantsData);
-        return;
-    }
-    const filteredPlants = allPlantsData.filter(plant =>
-        (plant.category && plant.category.toLowerCase().includes(id.toLowerCase())) ||
-        (plant.categories && plant.categories.some(cat => cat.toLowerCase().includes(id.toLowerCase())))
-    );
-    displayPlants(filteredPlants);
+    showSpinner();
+    
+    setTimeout(() => {
+        if (id === 'all') {
+            displayPlants(allPlantsData);
+        } else {
+            const filteredPlants = allPlantsData.filter(plant =>
+                (plant.category && plant.category.toLowerCase().includes(id.toLowerCase())) ||
+                (plant.categories && plant.categories.some(cat => cat.toLowerCase().includes(id.toLowerCase())))
+            );
+            displayPlants(filteredPlants);
+        }
+        hideSpinner();
+    }, 300);
 }
 
 function displayPlants(plants) {
@@ -112,16 +121,17 @@ function displayPlants(plants) {
         card.innerHTML = `
             <img src="${img}" alt="${name}" class="w-full h-40 object-cover rounded-md mb-3">
             <h3 class="font-semibold text-lg leading-6 hover:underline cursor-pointer" data-id="${id}">${name}</h3>
-            <p class="text-sm  h-[60px] overflow-x-auto text-ellipsis text-slate-600">${desc.length > 100 ? desc.substring(0, 100) + '...' : desc}</p>
+            <p class="text-sm h-[60px] overflow-x-auto text-ellipsis text-slate-600">${desc.length > 100 ? desc.substring(0, 100) + '...' : desc}</p>
             <div class="mt-3 flex items-center justify-between">
                 <div class="text-xs bg-emerald-100 px-2 py-1 rounded">${category}</div>
-                <div class="font-semibold">৳${price}</div>
+                <div class="font-bold">৳${price}</div>
             </div>
             <div class="mt-3">
-                <button class="add-to-cart w-full bg-emerald-700 text-white py-2 rounded transition-transform duration-200
- hover:-translate-y-1 cursor-pointer hover:bg-emerald-800" data-id="${id}" data-name="${escapeHtml(name)}" data-price="${price}">Add to Cart</button>
+                <button class="add-to-cart w-full bg-emerald-700 text-white py-2 rounded-2xl transition-transform duration-200
+hover:-translate-y-1 cursor-pointer hover:bg-emerald-800" data-id="${id}" data-name="${escapeHtml(name)}" data-price="${price}">Add to Cart</button>
             </div>
         `;
+        
         treeContainer.appendChild(card);
 
         card.querySelector('h3').addEventListener('click', () => openModalWithPlant(id));
@@ -139,34 +149,68 @@ function displayPlants(plants) {
 // UI and event handling
 function displayCategory(categories) {
     allCategory.innerHTML = '';
-    const liAll = document.createElement('li');
-    liAll.innerHTML = `<button class="w-full text-left px-3 py-2 rounded hover:bg-emerald-100" data-id="all">All Trees</button>`;
-    allCategory.appendChild(liAll);
-    liAll.querySelector('button').addEventListener('click', () => {
-        setActiveCategory('all');
-        loadCategoryPlants('all');
-    });
+    mobileCategorySelect.innerHTML = '';
 
+    // Add 'All Trees' to both
+    const allOption = document.createElement('option');
+    allOption.value = 'all'; // Use 'all' as the value
+    allOption.textContent = 'All Trees';
+    mobileCategorySelect.appendChild(allOption);
+
+    const liAll = document.createElement('li');
+    liAll.innerHTML = `<button class="w-full text-left px-3 py-2 rounded hover:bg-emerald-100" data-id="all" data-filter-name="all">All Trees</button>`; // Use a data attribute for filtering
+    allCategory.appendChild(liAll);
+
+    // Add other categories to both
     categories.forEach(cat => {
         const id = cat.category_id || cat.id || cat.categoryId;
         const name = cat.category_name || cat.name || cat.title || 'Category';
+
+        // Desktop list item
         const li = document.createElement('li');
-        li.innerHTML = `<button class="w-full menu menu-sm z-1 text-left px-3 py-2 rounded hover:bg-emerald-100" data-id="${id}">${name}</button>`;
+        li.innerHTML = `<button class="w-full menu menu-sm z-1 text-left px-3 py-2 rounded hover:bg-emerald-100" data-id="${id}" data-filter-name="${name}">${name}</button>`;
         allCategory.appendChild(li);
-        li.querySelector('button').addEventListener('click', () => {
-            setActiveCategory(id);
-            loadCategoryPlants(name); 
+
+        // Mobile dropdown option
+        const option = document.createElement('option');
+        option.value = name;
+        option.textContent = name;
+        option.dataset.id = id;
+        mobileCategorySelect.appendChild(option);
+    });
+
+    // Event listeners for both
+    allCategory.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const filterName = btn.dataset.filterName; // Get the filter name from data attribute
+            setActiveCategory(btn.dataset.id);
+            loadCategoryPlants(filterName);
         });
     });
+mobileCategorySelect.addEventListener('change', (e) => {
+    const selected = e.target.selectedOptions[0];
+    const categoryId = selected.dataset.id; 
+    setActiveCategory(categoryId);
+    loadCategoryPlants(categoryId === 'all' ? 'all' : selected.textContent);
+});
+
 }
 
 function setActiveCategory(id) {
     activeCategoryId = id;
+    
+    // For desktop buttons
     document.querySelectorAll('#all-category button').forEach(btn => {
         btn.classList.remove('bg-emerald-700', 'text-white');
     });
     const activeBtn = Array.from(document.querySelectorAll('#all-category button')).find(b => b.dataset.id == id);
     if (activeBtn) activeBtn.classList.add('bg-emerald-700', 'text-white');
+
+    // For mobile dropdown
+    const activeOption = Array.from(mobileCategorySelect.options).find(opt => opt.value === id || opt.textContent === id);
+    if(activeOption) {
+        mobileCategorySelect.value = activeOption.value;
+    }
 }
 
 function openModalWithPlant(id) {
@@ -181,26 +225,24 @@ function openModalWithPlant(id) {
         const img = p.image || p.thumbnail || 'https://via.placeholder.com/400x250?text=No+Image';
         const desc = p.description || p.details || 'No details available.';
         const price = p.price || 500;
+        const category = p.category || (p.categories && p.categories[0]) || 'General';
 
         modalContent.innerHTML = `
             <div class="grid md:grid-cols-2 gap-4">
                 <div><img src="${img}" alt="${name}" class="w-full h-60 object-cover rounded-md mb-3"></div>
                 <div>
                     <h2 class="text-xl font-bold mb-2">${name}</h2>
-                    
+                    <div class="text-xs bg-emerald-100 px-2 py-1 rounded w-fit mb-2">${category}</div>
                     <p class="text-sm text-slate-700 mb-3">${desc}</p>
                     <div class="font-semibold mb-3">Price: ৳${price}</div>
-                    <button class="bg-emerald-700 text-white px-4 py-2 rounded transition-transform duration-200
- hover:-translate-y-1 cursor-pointer hover:bg-emerald-800" id="modal-add">Add to Cart</button>
+                    <button class="bg-emerald-700 text-white px-4 py-2 transition-transform duration-200
+hover:-translate-y-1 cursor-pointer rounded-2xl hover:bg-emerald-800" id="modal-add">Add to Cart</button>
                 </div>
             </div>
         `;
         document.getElementById('modal-add').addEventListener('click', () => {
-           
             addToCart({ id, name, price });
-    
             closeModal();
-            
         });
     } else {
         modalContent.innerHTML = '<div class="p-6 text-center">Failed to load details.</div>';
@@ -228,6 +270,7 @@ function removeFromCart(index) {
 }
 
 function renderCart() {
+    // Desktop cart
     cartList.innerHTML = '';
     let total = 0;
     cart.forEach((c, i) => {
@@ -245,6 +288,26 @@ function renderCart() {
         cartList.appendChild(div);
     });
     cartTotal.textContent = `৳${total}`;
+
+    // Mobile cart
+    cartListMobile.innerHTML = '';
+    let totalMobile = 0;
+    cart.forEach((c, i) => {
+        totalMobile += Number(c.price) || 0;
+        const div = document.createElement('div');
+        div.className = 'flex items-center justify-between bg-emerald-50 p-2 rounded';
+        div.innerHTML = `
+            <div>
+                <div class="font-semibold">${c.name}</div>
+                <div class="text-xs text-slate-600">৳${c.price}</div>
+            </div>
+            <button class="text-red-500 text-sm remove-btn">✕</button>
+        `;
+        div.querySelector('.remove-btn').addEventListener('click', () => removeFromCart(i));
+        cartListMobile.appendChild(div);
+    });
+    cartTotalMobile.textContent = `৳${totalMobile}`;
+    cartCount.textContent = cart.length;
 }
 
 // Form submit
